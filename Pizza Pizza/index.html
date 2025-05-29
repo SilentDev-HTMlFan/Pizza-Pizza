@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Night Owl Pizza Co.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light Mode */
+            --bg-light: #FFF8F0;
+            --text-light: #2A2A2A;
+            --accent-light: #E74C3C;
+            --border-light: #2A2A2A;
+            
+            /* Dark Mode */
+            --bg-dark: #1A1A1A;
+            --text-dark: #FFF8F0;
+            --accent-dark: #FF6B6B;
+            --border-dark: #FFF8F0;
+            
+            /* Animation */
+            --transition: 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        /* Base Styles */
+        body {
+            font-family: 'Courier Prime', monospace;
+            background: var(--bg-light);
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            transition: background var(--transition), color var(--transition);
+            line-height: 1.6;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        h1::after {
+            content: "🍕";
+            margin-left: 10px;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 2rem 0;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed var(--border-light);
+            transition: border-color var(--transition);
+        }
+
+        .dark-mode nav {
+            border-color: var(--border-dark);
+        }
+
+        nav a {
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        nav a.active {
+            font-weight: bold;
+        }
+
+        nav a.active:after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-light);
+            transition: background var(--transition);
+        }
+
+        .dark-mode nav a.active:after {
+            background: var(--accent-dark);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin: 4rem 0;
+        }
+
+        .hero-image {
+            position: relative;
+            height: 150px;
+            margin: 2rem auto;
+            width: 150px;
+        }
+
+        .pizza-slice {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: #F8DE7E;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+            transform: rotate(0deg);
+            transition: transform 0.3s;
+        }
+
+        .pizza-crust {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 110px;
+            height: 20px;
+            background: #E5B76E;
+            border-radius: 10px;
+        }
+
+        /* Dark Mode Toggle */
+        .dark-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: none;
+            border: 1px dashed var(--border-light);
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+        }
+
+        .dark-toggle:hover {
+            transform: rotate(30deg);
+        }
+
+        .dark-mode .dark-toggle {
+            border-color: var(--border-dark);
+        }
+
+        /* Pizza Slice Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .hero:hover .pizza-slice {
+            animation: float 2s ease-in-out infinite;
+        }
+
+        /* Menu Page Styles */
+        .menu-item {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border: 1px dashed var(--accent-light);
+            border-radius: 5px;
+            transition: all var(--transition);
+        }
+
+        .dark-mode .menu-item {
+            border-color: var(--accent-dark);
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .btn-order {
+            background: none;
+            border: 1px solid var(--border-light);
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all var(--transition);
+            margin-top: 10px;
+        }
+
+        .dark-mode .btn-order {
+            border-color: var(--border-dark);
+        }
+
+        .btn-order:hover {
+            background: var(--accent-light);
+            color: var(--bg-light);
+        }
+
+        .dark-mode .btn-order:hover {
+            background: var(--accent-dark);
+            color: var(--bg-dark);
+        }
+
+        /* Insomniacs Club */
+        .membership-counter {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .counter-bar {
+            height: 8px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .dark-mode .counter-bar {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .counter-fill {
+            height: 100%;
+            width: 72%;
+            background: var(--accent-light);
+            transition: width 1s ease, background var(--transition);
+        }
+
+        .dark-mode .counter-fill {
+            background: var(--accent-dark);
+        }
+
+        .perk-card {
+            border: 1px dashed var(--accent-light);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            transition: all var(--transition);
+        }
+
+        .dark-mode .perk-card {
+            border-color: var(--accent-dark);
+        }
+
+        .perk-card:hover {
+            transform: scale(1.02);
+        }
+
+        /* Support Page */
+        .support-card {
+            border: 1px dashed var(--accent-light);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 5px;
+            transition: all var(--transition);
+        }
+
+        .dark-mode .support-card {
+            border-color: var(--accent-dark);
+        }
+
+        /* About Page */
+        .signature {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .signature img {
+            max-width: 200px;
+            filter: invert(0);
+            transition: filter var(--transition);
+        }
+
+        .dark-mode .signature img {
+            filter: invert(1);
+        }
+
+        /* Page Content */
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .hero {
+                margin: 2rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Night Owl Pizza Co.</h1>
+        <p>For those who dough what they love</p>
+    </header>
+    
+    <nav>
+        <a href="#" class="nav-link active" data-page="home">Home</a>
+        <a href="#" class="nav-link" data-page="about">Our Story</a>
+        <a href="#" class="nav-link" data-page="menu">The Menu</a>
+        <a href="#" class="nav-link" data-page="support">Support</a>
+        <a href="#" class="nav-link" data-page="insomniacs">Insomniacs Club</a>
+    </nav>
+    
+    <main>
+        <!-- Home Page -->
+        <section class="page-content active" id="home">
+            <div class="hero">
+                <h2>Pizza perfected at midnight</h2>
+                <p>Handmade by insomniacs, enjoyed by everyone</p>
+                <div class="hero-image">
+                    <div class="pizza-slice"></div>
+                    <div class="pizza-crust"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Page -->
+        <section class="page-content" id="about">
+            <div class="story">
+                <h2>Born from late-night cravings</h2>
+                <p>In 2012, two college friends traded ramen for dough. What began as a 3am drunken sketch became a city-wide obsession.</p>
+                <div class="signature">
+                    <p>Flour-dusted and sleep-deprived,</p>
+                    <div style="border:1px dashed #ccc; display:inline-block; padding:10px; filter: invert(var(--img-invert, 0));">
+                        <svg width="200" height="50" viewBox="0 0 200 50">
+                            <path d="M10,25 Q30,5 50,25 T90,25 T130,25 T170,25" stroke="currentColor" fill="none" stroke-width="2"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Menu Page -->
+        <section class="page-content" id="menu">
+            <h2>The Night Owl Menu</h2>
+            <div class="menu-item">
+                <h3>The Night Owl Special</h3>
+                <p>Tomato sauce, mozzarella, caramelized onions, pancetta</p>
+                <button class="btn-order">Order (3am-5am only)</button>
+            </div>
+            <div class="menu-item">
+                <h3>Moonlight Margherita</h3>
+                <p>San Marzano tomatoes, fresh basil, buffalo mozzarella</p>
+                <button class="btn-order">Order</button>
+            </div>
+            <div class="menu-item">
+                <h3>Insomniac's Delight</h3>
+                <p>Double pepperoni, jalapeños, honey drizzle</p>
+                <button class="btn-order">Order</button>
+            </div>
+        </section>
+
+        <!-- Support Page -->
+        <section class="page-content" id="support">
+            <div class="support-card">
+                <h3>We answer the dough calls</h3>
+                <p>Text us: <a href="sms:+15551234567" style="color:var(--accent-light)" class="dark-mode-accent">(555) PIZZA-NOW</a></p>
+                <p>Email: <a href="mailto:nightowl@pizza.com" style="color:var(--accent-light)" class="dark-mode-accent">nightowl@pizza.com</a></p>
+            </div>
+        </section>
+
+        <!-- Insomniacs Club -->
+        <section class="page-content" id="insomniacs">
+            <h2>Pizza Insomniacs Club</h2>
+            <p>For those who dough their best work at night</p>
+            
+            <div class="membership-counter">
+                <h3>🦉 <span id="memberCount">1,203</span> Night Owls</h3>
+                <div class="counter-bar">
+                    <div class="counter-fill"></div>
+                </div>
+            </div>
+            
+            <div class="perk-card">
+                <h3>🕒 Secret Menu</h3>
+                <p>Unlock the "Graveyard Shift" pizza (anchovies + honey)</p>
+            </div>
+            
+            <div class="perk-card">
+                <h3>📱 Priority Texts</h3>
+                <p>Jump the line when you text "(555) PIZZA-NOW"</p>
+            </div>
+            
+            <div class="perk-card">
+                <h3>🎟️ Monthly Mystery Box</h3>
+                <p>Get a random pizza ingredient delivered monthly</p>
+            </div>
+            
+            <form class="signup-form">
+                <input type="email" placeholder="Your night owl email" required style="width:100%; padding:10px; margin-bottom:10px; background:transparent; border:1px solid var(--border-light); color:inherit;">
+                <button type="submit" class="btn-order">Join the Nest</button>
+            </form>
+        </section>
+    </main>
+    
+    <button class="dark-toggle" aria-label="Toggle dark mode">🌙</button>
+    
+    <script>
+        // Initialize Dark Mode
+        function initDarkMode() {
+            const savedMode = localStorage.getItem('darkMode');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedMode === 'true' || (!savedMode && prefersDark)) {
+                enableDarkMode();
+            }
+        }
+
+        // Toggle Dark Mode
+        function toggleDarkMode() {
+            if (document.body.classList.contains('dark-mode')) {
+                disableDarkMode();
+            } else {
+                enableDarkMode();
+            }
+        }
+
+        // Enable Dark Mode with Animation
+        function enableDarkMode() {
+            document.body.style.pointerEvents = 'none';
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('darkMode', 'true');
+            document.querySelector('.dark-toggle').textContent = '☀️';
+            
+            setTimeout(() => {
+                document.body.style.pointerEvents = 'auto';
+            }, 400);
+        }
+
+        // Disable Dark Mode with Animation
+        function disableDarkMode() {
+            document.body.style.pointerEvents = 'none';
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('darkMode', 'false');
+            document.querySelector('.dark-toggle').textContent = '🌙';
+            
+            setTimeout(() => {
+                document.body.style.pointerEvents = 'auto';
+            }, 400);
+        }
+
+        // Menu Item Interactions
+        function setupMenuItems() {
+            document.querySelectorAll('.btn-order').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const originalText = this.textContent;
+                    this.textContent = 'Adding...';
+                    
+                    setTimeout(() => {
+                        this.textContent = 'Added! 🎉';
+                        
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                        }, 1500);
+                    }, 600);
+                });
+            });
+        }
+
+        // Animated Member Counter
+        function setupMemberCounter() {
+            const counter = document.getElementById('memberCount');
+            const fill = document.querySelector('.counter-fill');
+            
+            if (counter && fill) {
+                let count = 1203;
+                
+                setInterval(() => {
+                    count += Math.floor(Math.random() * 3);
+                    counter.textContent = count.toLocaleString();
+                    fill.style.width = `${72 + (count % 10)}%`;
+                }, 3000);
+            }
+        }
+
+        // Page Navigation
+        function setupPageNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+                    
+                    // Update active nav link
+                    navLinks.forEach(navLink => {
+                        navLink.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // Show selected page
+                    document.querySelectorAll('.page-content').forEach(page => {
+                        page.classList.remove('active');
+                    });
+                    document.getElementById(pageId).classList.add('active');
+                });
+            });
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            initDarkMode();
+            setupMenuItems();
+            setupMemberCounter();
+            setupPageNavigation();
+            
+            document.querySelector('.dark-toggle').addEventListener('click', toggleDarkMode);
+            
+            // Watch for system color scheme changes
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                if (!localStorage.getItem('darkMode')) {
+                    if (e.matches) {
+                        enableDarkMode();
+                    } else {
+                        disableDarkMode();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
